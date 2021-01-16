@@ -1,0 +1,4 @@
+enum ExploreOrUpdate{
+  Explore,
+  Update
+}
