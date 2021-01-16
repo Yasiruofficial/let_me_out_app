@@ -172,32 +172,35 @@ class _AdminEditPageState extends State<AdminEditPage> {
                     SizedBox(
                       height: 30,
                     ),
-                    DropdownButton<String>(
-                      iconDisabledColor: Colors.red,
-                      iconEnabledColor: Colors.blue,
-                      hint: Text("Select Event Category"),
-                      isExpanded: true,
-                      value: dropdownValue,
-                      icon: Icon(Icons.category_rounded),
-                      iconSize: 24,
-                      elevation: 16,
-                      style: TextStyle(color: Colors.blue),
-                      underline: Container(
-                        height: 2,
-                        color: Colors.blue,
+                    Padding(
+                      padding: EdgeInsets.only(left: 20,right: 20),
+                      child: DropdownButton<String>(
+                        iconDisabledColor: Colors.red,
+                        iconEnabledColor: Colors.blue,
+                        hint: Text("Select Event Category"),
+                        isExpanded: true,
+                        value: dropdownValue,
+                        icon: Icon(Icons.category_rounded),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: TextStyle(color: Colors.blue),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.blue,
+                        ),
+                        onChanged: (String newValue) {
+                          setState(() {
+                            dropdownValue = newValue;
+                          });
+                        },
+                        items: <String>['Beach Party', 'Musical Show', 'Dog Show', 'Halloween Party','Exhibition','Holi Festival']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
                       ),
-                      onChanged: (String newValue) {
-                        setState(() {
-                          dropdownValue = newValue;
-                        });
-                      },
-                      items: <String>['One', 'Two', 'Free', 'Four']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
                     ),
                     SizedBox(
                       height: 30,
