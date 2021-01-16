@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "960386791944",
+    "firebase_url": "https://let-me-out-ae8e6.firebaseio.com",
+    "project_id": "let-me-out-ae8e6",
+    "storage_bucket": "let-me-out-ae8e6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960386791944:android:167b5b2ed9dcf8177c6fbd",
+        "android_client_info": {
+          "package_name": "com.nsbm.teamfluttersquad.let_me_out"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "960386791944-8ecmk1l4bip81q89u4cthpsn0l4e7tbs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nsbm.teamfluttersquad.let_me_out",
+            "certificate_hash": "f16c2a4a38ede933cd0ec66f64f48a3da1e8e8f6"
+          }
+        },
+        {
+          "client_id": "960386791944-4v6s54tslrj85v454pin0aqqlnhs58l2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRk4isAVCgSsCgIjzXtqoOsEbPs7GmEUA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "960386791944-4v6s54tslrj85v454pin0aqqlnhs58l2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
