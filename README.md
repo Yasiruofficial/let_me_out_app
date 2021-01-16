@@ -2,7 +2,7 @@
 
 ## Mobile Application Development Assignment
 
-
+<img src="./images/flutter app.png">
 
 ## Description of project
 
