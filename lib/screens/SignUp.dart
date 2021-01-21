@@ -27,12 +27,15 @@ class _SignUpPageState extends State<SignUpPage> {
           TextStyle(fontSize: 20, fontFamily: 'Poppins', color: Colors.white));
 
   String _email;
+
   void setEmail(String email) => this._email = email;
 
   String _password;
+
   void setPassword(String password) => this._password = password;
 
   String _confirmPassword;
+
   void setConfirmPassword(String confirmPassword) =>
       this._confirmPassword = confirmPassword;
 
@@ -115,17 +118,25 @@ class _SignUpPageState extends State<SignUpPage> {
       onTap: () async {
         try {
           if (_formKey.currentState.validate()) {
-            setState(() {
-              registerWidget = LoadingWidget();
-              _formKey.currentState.save();
-            });
+            _formKey.currentState.save();
 
-            AppUser _user = await _signUp(_email, _password);
-            Provider.of<LandingPageViewModel>(context, listen: false)
-                .updatedUser(_user);
+            if (_password == _confirmPassword) {
+              setState(() {
+                registerWidget = LoadingWidget();
+              });
+
+
+              AppUser _user = await _signUp(_email, _password);
+              Provider.of<LandingPageViewModel>(context, listen: false)
+                  .updatedUser(_user);
+
+            } else {
+              Toast.show("Password does not match", context,
+                  duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+            }
           }
         } catch (e) {
-          print(e);
+          print("Exeption is : " + e.toString());
         }
       },
       child: Container(
@@ -142,9 +153,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   spreadRadius: 2)
             ],
             gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [Colors.indigo, Colors.cyan])),
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [Colors.indigo, Colors.cyan],
+            )),
         child: registerWidget,
       ),
     );

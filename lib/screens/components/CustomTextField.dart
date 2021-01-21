@@ -29,6 +29,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 if (value.isEmpty) {
                   return "Field can not be empty";
                 }
+                else if(value.length < 6){
+                  return "Password must have at least 8 characters";
+                }
                 return null;
               },
               onSaved: (newValue) {

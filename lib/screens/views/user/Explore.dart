@@ -63,8 +63,7 @@ class _ExploreState extends State<Explore> {
                                     child: Ticket(
                                       radius: 10.0,
                                       child: GestureDetector(
-                                        onTap: () => Navigator.pushNamed(
-                                            context, '/ticket_demo'),
+                                        onTap: (){},
                                         child: Stack(
                                           fit: StackFit.expand,
                                           children: [

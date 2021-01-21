@@ -35,6 +35,9 @@ class FirebaseFirestoreService {
     }
   }
 
+
+
+
   Future<bool> addEvent(MyEvent event, File file) async {
     try {
       User appUser = await _firebaseAuthService.currentUser;
@@ -123,6 +126,29 @@ class FirebaseFirestoreService {
 
       }
       return events;
+
+    }catch(e){
+      print(e);
+      return null;
+    }
+  }
+
+  Future<double> getProfitByEventID(String id) async {
+    try {
+      double total = 0;
+      QuerySnapshot qs = await _firebaseFirestore.collection("userevents").where("eventId", isEqualTo: id ).get();
+
+      for(DocumentSnapshot ds in qs.docs){
+
+        UserEvents userEvent = new UserEvents();
+        userEvent = UserEvents.fromJson(ds.data());
+
+        for(var i in userEvent.tickets){
+          total += double.parse(i.availableQty) * double.parse(i.price);
+        }
+
+      }
+      return total;
 
     }catch(e){
       print(e);
