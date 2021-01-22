@@ -294,6 +294,24 @@ class FirebaseFirestoreService {
     return myevents;
   }
 
+  //------------------------------------------------------------------
+
+  Future<List<MyEvent>> getCustomEvents(String category) async {
+    MyEvent myEvent;
+    List<MyEvent> myevents = new List<MyEvent>();
+
+    final QuerySnapshot querySnapshot = await _firebaseFirestore
+        .collection('events')
+        .where("category", isEqualTo: category)
+        .orderBy("uploadedOn")
+        .get();
+    for(QueryDocumentSnapshot ds in querySnapshot.docs) {
+      myEvent = MyEvent.fromJson(ds.data());
+      myevents.add(myEvent);
+    }
+    return myevents;
+  }
+
   //---------------------------------------------------------------------------------------------
 
   Future<List<MyEvent>> getAdminEventsById(String id) async {

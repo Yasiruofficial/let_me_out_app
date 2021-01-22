@@ -325,7 +325,7 @@ class _AdminEditPageState extends State<AdminEditPage> {
               heroTag: "btn1",
               elevation: 8,
               backgroundColor: Colors.green,
-              label: Text("Update"),
+              label: addBtn,
               icon: Icon(Icons.upload_rounded),
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
@@ -384,6 +384,7 @@ class _AdminEditPageState extends State<AdminEditPage> {
                     Toast.show("Please add at least one venue", context,
                         duration: Toast.LENGTH_LONG, gravity: Toast.CENTER);
                   }
+                  addBtn = Text('Update');
                 }
               },
             ),

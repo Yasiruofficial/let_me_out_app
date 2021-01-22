@@ -6,6 +6,10 @@ import 'package:let_me_out/screens/views/user/Components/HorizontalListBuilder.d
 import 'package:let_me_out/screens/views/user/Components/VerticalListBuilder.dart';
 import 'package:let_me_out/services/FirebaseAuthService.dart';
 import 'package:let_me_out/services/FirebaseFirestoreService.dart';
+import 'package:let_me_out/view_models/HomeUpdateViewModel.dart';
+import 'package:provider/provider.dart';
+
+import '../../components/loading_widget.dart';
 
 class Home extends StatefulWidget {
   final FirebaseAuthService baseAuthService;
@@ -18,23 +22,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<MyEvent> myEvents;
-
-  Future<void> getEvents() async {
-    myEvents = await widget.firestoreService.getAvailableRecent50Events();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getEvents(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return LoadingWidget(
-            animationSize: 50,
-            color: Colors.blue,
-          );
-        } else {
+    Provider.of<HomeUpdateViewModel>(context,listen: false).get50Events(widget.firestoreService);
           return Padding(
             padding: EdgeInsets.only(left: 12, right: 10, top: 12),
             child: Column(
@@ -76,7 +67,14 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                       ),
-                      Expanded(flex: 1, child: CategoryBuilder()),
+                      Expanded(
+                          flex: 1,
+                          child: Consumer<HomeUpdateViewModel>(
+                            builder: (context, value, child) {
+                              return CategoryBuilder(firestoreService: widget.firestoreService,selected: value.selected,);
+                            },
+                          ),
+                      ),
                     ],
                   ),
                 ),
@@ -97,10 +95,20 @@ class _HomeState extends State<Home> {
                       ),
                       Expanded(
                         flex: 1,
-                        child: HorizontalListBuilder(
-                          firestoreService: widget.firestoreService,
-                          baseAuthService: widget.baseAuthService,
-                          myEvents: myEvents,
+                        child: Consumer<HomeUpdateViewModel>(
+                          builder: (context, value, child) {
+                            if(value.loading == true){
+                              return LoadingWidget(color: Colors.blue,animationSize: 50);
+                            }
+                            else{
+                              return HorizontalListBuilder(
+                                firestoreService: widget.firestoreService,
+                                baseAuthService: widget.baseAuthService,
+                                myEvents: value.myEvents,
+                              );
+                            }
+                          },
+
                         ),
                       ),
                     ],
@@ -109,8 +117,5 @@ class _HomeState extends State<Home> {
               ],
             ),
           );
-        }
-      },
-    );
   }
 }

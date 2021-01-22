@@ -352,14 +352,10 @@ class _AdminAddEventState extends State<AdminAddEvent> {
                     if (!status) {
                       Toast.show("Image Upload Error", context,
                           duration: Toast.LENGTH_LONG, gravity: Toast.CENTER);
-                      setState(() {
-                        addBtn = Text("Oops. Try again");
-                      });
                     } else {
                       Toast.show("Event added successfully", context,
                           duration: Toast.LENGTH_LONG, gravity: Toast.CENTER);
                       setState(() {
-                        addBtn = Text("Successful");
                         _formKey.currentState.reset();
                         _venues.clear();
                         _tickets.clear();

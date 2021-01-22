@@ -25,27 +25,32 @@ class _AdminHomeState extends State<AdminHome> {
   List<MyEvent> myEvents;
   List<String> chartDropdownItemsArray;
   List<List<double>> chartsArray;
-  List<double> profitList;
-  int itemCount=0;
-  bool alreadyLoaded = false;
+  double totalProfit = 0;
+  int itemCount = 0;
   int actualChart = 0;
+  bool alreadyLoaded = false;
   String actualDropdown;
+
 
   Future<void> getDetails() async {
 
     if(!alreadyLoaded){
 
-      chartDropdownItemsArray = List<String>();
-      chartsArray = List<List<double>>();
-      profitList = List<double>();
-
       AppUser user = await widget.baseAuthService.getCurrentUser();
       myEvents = await widget.firestoreService.getAdminEventsById(user.uid);
 
+      totalProfit = 0;
+      itemCount = 0;
+      actualChart = 0;
+      chartDropdownItemsArray = new List<String>();
+      chartsArray = new List<List<double>>();
+
       for(var i in myEvents){
+
         itemCount++;
         chartDropdownItemsArray.add(i.title);
         List<double> templist = new List<double>();
+
         for(int i = 0; i<25; i++){
           var random = new Random();
           double tempDouble = double.parse(random.nextInt(2000).toString());
@@ -60,12 +65,18 @@ class _AdminHomeState extends State<AdminHome> {
         chartsArray.add(templist);
 
         double profit  = await widget.firestoreService.getProfitByEventID(i.id);
-        profitList.add(profit);
+        totalProfit += profit;
+
+        print("ItemCount : " + itemCount.toString());
 
       }
-      alreadyLoaded = true;
-      actualDropdown = chartDropdownItemsArray[0];
+
+
     }
+
+    alreadyLoaded = true;
+    print('chartDropdownItemsArray[0] : ' + chartDropdownItemsArray.toString());
+    actualDropdown = chartDropdownItemsArray[0];
 
   }
 
@@ -78,9 +89,7 @@ class _AdminHomeState extends State<AdminHome> {
         builder: (context, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting){
             if(alreadyLoaded){
-              return Opacity(
-                opacity: 0,
-              );
+              return Container();
             }else{
               return LoadingWidget(color: Colors.blue,animationSize: 50);
             }
@@ -178,91 +187,62 @@ class _AdminHomeState extends State<AdminHome> {
                 ),
                 _buildTile(
                   Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              DropdownButton(
-                                  isDense: true,
-                                  value: actualDropdown,
-                                  onChanged: (String value) => setState(() {
-                                    actualDropdown = value;
-                                    actualChart = chartDropdownItemsArray.indexOf(value);
-                                  }),
-                                  items: chartDropdownItemsArray.map((String title) {
-                                    return DropdownMenuItem(
-                                      value: title,
-                                      child: SizedBox(
-                                        width: MediaQuery.of(context).size.width-150,
-                                        child: Text(title,
-                                            overflow: TextOverflow.ellipsis,
-                                            softWrap: false,
-                                            maxLines: 2,
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Sparkline(
+                          data: chartsArray[actualChart],
+                          lineWidth: 5.0,
+                          lineColor: Colors.greenAccent,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        _buildTile(
+                            Padding(
+                              padding: const EdgeInsets.all(24.0),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text('Total Profit from tickets',
+                                            style: TextStyle(color: Colors.redAccent)),
+                                        Text("Rs"+totalProfit.toString(),
                                             style: TextStyle(
-                                                color: Colors.blue,
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 14.0)),
-                                      ),
-                                    );
-                                  }).toList())
-                            ],
-                          ),
-                          Padding(padding: EdgeInsets.only(bottom: 4.0)),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Sparkline(
-                            data: chartsArray[actualChart],
-                            lineWidth: 5.0,
-                            lineColor: Colors.greenAccent,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          _buildTile(
-                              Padding(
-                                padding: const EdgeInsets.all(24.0),
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text('Total Profit from tickets',
-                                              style: TextStyle(color: Colors.redAccent)),
-                                          Text("Rs"+profitList[actualChart].toString(),
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 34.0))
-                                        ],
-                                      ),
-                                      Material(
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.circular(24.0),
-                                        child: Center(
-                                          child: Padding(
-                                            padding: EdgeInsets.all(16.0),
-                                            child: Icon(Icons.event,
-                                                color: Colors.white, size: 30.0),
-                                          ),
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 34.0))
+                                      ],
+                                    ),
+                                    Material(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(24.0),
+                                      child: Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(16.0),
+                                          child: Icon(Icons.event,
+                                              color: Colors.white, size: 30.0),
                                         ),
                                       ),
-                                    ]),
-                              ),
-                              onTap: () {
+                                    ),
+                                  ]),
+                            ),
+                            onTap: () {
 
-                              }
-                          )
-                        ],
-                      )),
+                            }
+                        )
+                      ],
+                    ),
+                  ),
                 ),
 
               ],

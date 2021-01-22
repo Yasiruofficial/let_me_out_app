@@ -5,6 +5,7 @@ import 'package:let_me_out/screens/views/user/Map.dart';
 import 'package:let_me_out/screens/views/user/Home.dart';
 import 'package:let_me_out/services/FirebaseAuthService.dart';
 import 'package:let_me_out/services/FirebaseFirestoreService.dart';
+import 'package:let_me_out/view_models/HomeUpdateViewModel.dart';
 import 'package:let_me_out/view_models/LandingPage_view_model.dart';
 import 'package:let_me_out/view_models/MapUpdate_view_model.dart';
 import 'package:provider/provider.dart';
@@ -148,9 +149,12 @@ class _MainPageState extends State<MainPage> {
                 firestoreService: widget.firestoreService,
               ),
             ),
-            Home(
-              baseAuthService: widget.baseAuthService,
-              firestoreService: widget.firestoreService,
+            ChangeNotifierProvider<HomeUpdateViewModel>(
+              create:(context) => HomeUpdateViewModel() ,
+              child: Home(
+                baseAuthService: widget.baseAuthService,
+                firestoreService: widget.firestoreService,
+              ),
             ),
             Explore(
               baseAuthService: widget.baseAuthService,
